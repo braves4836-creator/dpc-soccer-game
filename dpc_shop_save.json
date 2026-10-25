@@ -1,0 +1,14 @@
+{
+    "money": 950,
+    "unlocked_bg": [
+        "default"
+    ],
+    "active_bg": "default",
+    "achievements": {
+        "corner_master": false,
+        "sound_barrier": true,
+        "on_fire": true,
+        "showboat": true,
+        "clean_sheet": false
+    }
+}
