@@ -1,0 +1,43 @@
+name: DPC Games APK Compiler
+on: [push, workflow_dispatch]
+
+jobs:
+  compile-native-apk:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Project Source Code
+        uses: actions/checkout@v3
+
+      - name: Initialize System Environment Runtime
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Inject Android Compiler Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libffi-dev openjdk-17-jdk-headless zip unzip
+          pip install --upgrade pip
+          pip install cython==0.29.36 buildozer
+
+      - name: Generate Buildozer Specification Profile
+        run: |
+          if [ ! -f buildozer.spec ]; then
+            buildozer init
+          fi
+
+      - name: Configure Application Package Requirements
+        run: |
+          sed -i 's/title = My Application/title = DPC Penalty Game/g' buildozer.spec
+          sed -i 's/package.name = myapp/package.name = dpcpenaltygame/g' buildozer.spec
+          sed -i 's/requirements = python3,kivy/requirements = python3,kivy,pygame/g' buildozer.spec
+          sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/g' buildozer.spec
+
+      - name: Execute Native Android Compilation Block
+        run: buildozer android debug
+
+      - name: Export Downloadable App Package Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: downloadable-apk-file
+          path: bin/*.apk
