@@ -32,6 +32,10 @@ jobs:
           sed -i 's/package.name = myapp/package.name = dpcpenaltygame/g' buildozer.spec
           sed -i 's/requirements = python3,kivy/requirements = python3,kivy,pygame/g' buildozer.spec
           sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/g' buildozer.spec
+          
+          # Force the use of the stable NDK version to prevent harfbuzz compilation drops
+          sed -i 's/# android.ndk = 28c/android.ndk = 25c/g' buildozer.spec
+          sed -i 's/android.ndk = 28c/android.ndk = 25c/g' buildozer.spec
 
       - name: Auto-Accept Android SDK Licenses
         run: |
