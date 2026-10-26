@@ -41,7 +41,6 @@ jobs:
 
       - name: Execute Native Android Compilation Block
         run: |
-          # Force the compiler flag globally to prevent harfbuzz from crashing on strict errors
           export APP_CFLAGS="-Wno-error=format-security"
           yes | buildozer android debug
 
@@ -49,4 +48,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: downloadable-apk-file
-          path: bin/*.apk
+          # This updated path explicitly targets the exact internal folder where Buildozer drops the final APK
+          path: /home/runner/.buildozer/android/platform/build-android/*/bin/*.apk
